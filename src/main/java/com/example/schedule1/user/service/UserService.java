@@ -35,6 +35,17 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public User login(LoginRequest request){
+        User user = userRepository.findByEmail(request.getEmail()).orElseThrow(
+                () -> new IllegalArgumentException("비밀번호 또는 이메일이 일치하지 않음")
+        );
+        if (!request.getPassword().equals(user.getPassword())){
+            throw new IllegalArgumentException("비밀번호 또는 이메일이 일치하지 않음");
+        }
+        return user;
+    }
+
+    @Transactional(readOnly = true)
     public List<GetUserResponse> getAll(){
         List<User> users = userRepository.findAll();
         List<GetUserResponse> dtos = new ArrayList<>();

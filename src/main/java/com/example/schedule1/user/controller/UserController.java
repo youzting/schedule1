@@ -1,14 +1,16 @@
 package com.example.schedule1.user.controller;
 
-import com.example.schedule1.schedule.dto.CreateScheduleRequest;
-import com.example.schedule1.schedule.dto.CreateScheduleResponse;
+
 import com.example.schedule1.user.dto.*;
+import com.example.schedule1.user.entity.User;
 import com.example.schedule1.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.servlet.http.HttpSession;
+
 
 import java.util.List;
 
@@ -20,6 +22,16 @@ public class UserController {
     @PostMapping("/users")
     public ResponseEntity<CreateUserResponse> create (@Valid @RequestBody CreateUserRequest request){
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(request));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request, HttpSession session) {
+        User user = userService.login(request);
+        SessionUser sessionUser = new SessionUser(user.getId(), user.getEmail());
+        session.setAttribute("loginUser", sessionUser);
+
+        LoginResponse response = new LoginResponse(user.getId(), user.getEmail());
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping("/users")
