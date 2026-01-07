@@ -3,6 +3,8 @@ package com.example.schedule1.schedule.service;
 import com.example.schedule1.schedule.dto.*;
 import com.example.schedule1.schedule.entity.Schedule;
 import com.example.schedule1.schedule.repository.ScheduleRepository;
+import com.example.schedule1.user.entity.User;
+import com.example.schedule1.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,12 +16,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
+    private final UserRepository userRepository;
 
     @Transactional
-    public CreateScheduleResponse save(CreateScheduleRequest request){
+    public CreateScheduleResponse save(Long userId, CreateScheduleRequest request){
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new IllegalStateException("없는 유저입니다.")
+        );
         Schedule schedule = new Schedule(
                 request.getTitle(),
-                request.getText()
+                request.getText(),
+                user
         );
         Schedule saved = scheduleRepository.save(schedule);
         return new CreateScheduleResponse(
@@ -30,7 +37,10 @@ public class ScheduleService {
     }
 
     @Transactional(readOnly = true)
-    public List<GetScheduleResponse> getAll(){
+    public List<GetScheduleResponse> getAll(Long userId){
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new IllegalStateException("없는 유저입니다.")
+        );
         List<Schedule> schedules = scheduleRepository.findAll();
         List<GetScheduleResponse> dtos = new ArrayList<>();
         for (Schedule schedule : schedules) {

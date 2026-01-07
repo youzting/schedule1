@@ -15,11 +15,12 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
 
+
     @Transactional
     public CreateUserResponse save(CreateUserRequest request){
         User user = new User(
                 request.getUsername(),
-                request.getUsername()
+                request.getEmail()
         );
         User userSave = userRepository.save(user);
 
@@ -68,7 +69,7 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new IllegalStateException("유저가 없습니다")
         );
-        user.updateUser(request.getEamil());
+        user.updateUser(request.getEmail());
         return new UpdateUserResponse(
                 user.getId(),
                 user.getUsername(),

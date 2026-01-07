@@ -1,8 +1,10 @@
 package com.example.schedule1.schedule.dto;
 
+import com.example.schedule1.user.dto.GetUserResponse;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 public class CreateScheduleResponse {
@@ -10,9 +12,11 @@ public class CreateScheduleResponse {
     private final String title;
     private final String text;
 
+
     public CreateScheduleResponse(Long id, String title, String text) {
         this.id = id;
         this.title = title;
         this.text = text;
+
        }
 }
