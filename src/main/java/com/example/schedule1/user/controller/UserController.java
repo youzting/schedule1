@@ -35,22 +35,22 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<List<GetUserResponse>> getAll (){
+    public ResponseEntity<List<GetUserResponse>> getAll (@SessionAttribute(name = "loginUser") SessionUser sessionUser){
         return ResponseEntity.status(HttpStatus.OK).body(userService.getAll());
     }
 
     @GetMapping("/users/{userId}")
-    public ResponseEntity<GetUserResponse> getOne(@PathVariable Long userId){
+    public ResponseEntity<GetUserResponse> getOne(@PathVariable Long userId, @SessionAttribute(name = "loginUser") SessionUser sessionUser){
         return ResponseEntity.status(HttpStatus.OK).body(userService.getOne(userId));
     }
 
     @PutMapping("/users/{userId}")
-    public ResponseEntity<UpdateUserResponse> update(@PathVariable Long userId, @Valid @RequestBody UpdateUserRequest request){
+    public ResponseEntity<UpdateUserResponse> update(@PathVariable Long userId, @Valid @RequestBody UpdateUserRequest request, @SessionAttribute(name = "loginUser") SessionUser sessionUser){
         return  ResponseEntity.status(HttpStatus.OK).body(userService.update(userId, request));
     }
 
     @DeleteMapping("/users/{userId}")
-    public ResponseEntity<Void> delete(@PathVariable Long userId){
+    public ResponseEntity<Void> delete(@PathVariable Long userId, @SessionAttribute(name = "loginUser") SessionUser sessionUser){
         userService.delete(userId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

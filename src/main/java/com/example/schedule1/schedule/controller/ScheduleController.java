@@ -3,6 +3,12 @@ package com.example.schedule1.schedule.controller;
 import com.example.schedule1.schedule.dto.*;
 import com.example.schedule1.schedule.entity.Schedule;
 import com.example.schedule1.schedule.service.ScheduleService;
+import com.example.schedule1.user.dto.LoginRequest;
+import com.example.schedule1.user.dto.LoginResponse;
+import com.example.schedule1.user.dto.SessionUser;
+import com.example.schedule1.user.entity.User;
+import com.example.schedule1.user.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,29 +22,31 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ScheduleController {
     private final ScheduleService scheduleService;
+    private final UserService userService;
+
 
     @PostMapping("/users/{userId}/schedules")
-    public ResponseEntity<CreateScheduleResponse> create(@PathVariable Long userId, @Valid @RequestBody CreateScheduleRequest request){
+    public ResponseEntity<CreateScheduleResponse> create(@PathVariable Long userId, @Valid @RequestBody CreateScheduleRequest request, @SessionAttribute(name = "loginUser") SessionUser sessionUser){
         return ResponseEntity.status(HttpStatus.CREATED).body(scheduleService.save(userId, request));
     }
 
     @GetMapping("/users/{userId}/schedules")
-    public ResponseEntity<List<GetScheduleResponse>> getAll(@PathVariable Long userId) {
+    public ResponseEntity<List<GetScheduleResponse>> getAll(@PathVariable Long userId,  @SessionAttribute(name = "loginUser") SessionUser sessionUser) {
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getAll(userId));
     }
 
     @GetMapping("/users/{userId}/schedules/{scheduleId}")
-    public ResponseEntity<GetScheduleResponse> getOne(@PathVariable Long scheduleId){
+    public ResponseEntity<GetScheduleResponse> getOne(@PathVariable Long scheduleId,  @SessionAttribute(name = "loginUser") SessionUser sessionUser){
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getOne(scheduleId));
     }
 
     @PutMapping("/users/{userId}/schedules/{scheduleId}")
-    public ResponseEntity<UpdateScheduleResponse> update(@PathVariable Long scheduleId, @RequestBody UpdateScheduleRequest request){
+    public ResponseEntity<UpdateScheduleResponse> update(@PathVariable Long scheduleId, @RequestBody UpdateScheduleRequest request,  @SessionAttribute(name = "loginUser") SessionUser sessionUser){
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.update(scheduleId, request));
     }
 
     @DeleteMapping("/users/{userId}/schedules/{scheduleId}")
-    public ResponseEntity<Void> delete(@PathVariable Long scheduleId){
+    public ResponseEntity<Void> delete(@PathVariable Long scheduleId,  @SessionAttribute(name = "loginUser") SessionUser sessionUser){
         scheduleService.delete(scheduleId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
