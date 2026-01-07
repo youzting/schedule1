@@ -9,12 +9,15 @@ import lombok.NoArgsConstructor;
 @Table(name = "users")
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User extends BaseEntity {
+public class
+User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String username;
+
+    @Column(nullable = false, unique = true)
     private String email;
     private String password;
 

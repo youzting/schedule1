@@ -1,5 +1,6 @@
 package com.example.schedule1.user.service;
 
+import com.example.schedule1.exception.DuplicateEmailException;
 import com.example.schedule1.user.dto.*;
 import com.example.schedule1.user.entity.User;
 import com.example.schedule1.user.repository.UserRepository;
@@ -18,11 +19,15 @@ public class UserService {
 
     @Transactional
     public CreateUserResponse save(CreateUserRequest request){
+       if(userRepository.existsByEmail(request.getEmail())){
+           throw new DuplicateEmailException("Email이 이미 존재합니다.");
+       }
         User user = new User(
                 request.getUsername(),
                 request.getEmail(),
                 request.getPassword()
         );
+
         User userSave = userRepository.save(user);
 
         return new CreateUserResponse(
