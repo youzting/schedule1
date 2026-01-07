@@ -86,7 +86,14 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new IllegalStateException("유저가 없습니다")
         );
-        user.updateUser(request.getEmail());
+        String newEmail = request.getEmail();
+        //사용중인 이메일 제외 중복 검사
+        if (!user.getEmail().equals(newEmail)
+                && userRepository.existsByEmail(newEmail)) {
+            throw new DuplicateEmailException("이미 사용 중인 이메일입니다");
+        }
+
+        user.updateUser(newEmail);
         return new UpdateUserResponse(
                 user.getId(),
                 user.getUsername(),

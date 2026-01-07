@@ -35,12 +35,12 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<List<GetUserResponse>> getAll (@SessionAttribute(name = "loginUser") SessionUser sessionUser){
+    public ResponseEntity<List<GetUserResponse>> getAll (){
         return ResponseEntity.status(HttpStatus.OK).body(userService.getAll());
     }
 
     @GetMapping("/users/{userId}")
-    public ResponseEntity<GetUserResponse> getOne(@PathVariable Long userId, @SessionAttribute(name = "loginUser") SessionUser sessionUser){
+    public ResponseEntity<GetUserResponse> getOne(@PathVariable Long userId){
         return ResponseEntity.status(HttpStatus.OK).body(userService.getOne(userId));
     }
 
