@@ -32,7 +32,8 @@ public class ScheduleService {
         return new CreateScheduleResponse(
                 saved.getId(),
                 saved.getTitle(),
-                saved.getText()
+                saved.getText(),
+                userId
         );
     }
 
@@ -41,7 +42,7 @@ public class ScheduleService {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new IllegalStateException("없는 유저입니다.")
         );
-        List<Schedule> schedules = scheduleRepository.findAll();
+        List<Schedule> schedules = scheduleRepository.findByUserId(userId);
         List<GetScheduleResponse> dtos = new ArrayList<>();
         for (Schedule schedule : schedules) {
             GetScheduleResponse dto = new GetScheduleResponse(
@@ -49,7 +50,8 @@ public class ScheduleService {
                     schedule.getTitle(),
                     schedule.getText(),
                     schedule.getCreatedAt(),
-                    schedule.getModifiedAt()
+                    schedule.getModifiedAt(),
+                    userId
             );
             dtos.add(dto);
         }
@@ -57,16 +59,20 @@ public class ScheduleService {
     }
 
     @Transactional(readOnly = true)
-    public GetScheduleResponse getOne(Long scheduleId){
+    public GetScheduleResponse getOne(Long userId ,Long scheduleId){
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
                 () -> new IllegalStateException("일정이 없음")
         );
+        if(!userId.equals(schedule.getUser().getId())){
+            throw new IllegalStateException("유저의 일정이 없습니다.");
+        }
         return new GetScheduleResponse(
                 schedule.getId(),
                 schedule.getTitle(),
                 schedule.getText(),
                 schedule.getCreatedAt(),
-                schedule.getModifiedAt()
+                schedule.getModifiedAt(),
+                userId
         );
     }
 

@@ -11,13 +11,15 @@ public class GetScheduleResponse {
     private final String text;
     private final LocalDateTime createdAt;
     private final LocalDateTime modifiedAt;
+    private final Long userId;
 
-    public GetScheduleResponse(Long id, String title, String text, LocalDateTime createdAt, LocalDateTime modifiedAt)
+    public GetScheduleResponse(Long id, String title, String text, LocalDateTime createdAt, LocalDateTime modifiedAt,  Long userId)
     {
         this.id = id;
         this.title = title;
         this.text = text;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
+        this.userId = userId;
     }
 }

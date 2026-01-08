@@ -25,10 +25,10 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public Comment(String text, Schedule schedule, User user) {
+    public Comment(String text, User user, Schedule schedule) {
         this.text = text;
-        this.schedule = schedule;
         this.user = user;
+        this.schedule = schedule;
     }
 
 }

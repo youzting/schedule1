@@ -21,11 +21,11 @@ public class CommentController {
             @PathVariable Long userId,
             @PathVariable Long scheduleId,
             @RequestBody CreateCommentRequest request){
-        return ResponseEntity.status(HttpStatus.CREATED).body(commentService.save(scheduleId, userId, request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(commentService.save(userId, scheduleId, request));
     }
 
-    @GetMapping("/users/{userId}/schedules/{scheduleId}/comments")
-    public ResponseEntity<List<GetCommentResponse>> getAll(@PathVariable Long userId, @PathVariable Long scheduleId){
+    @GetMapping("/schedules/{scheduleId}/comments")
+    public ResponseEntity<List<GetCommentResponse>> getAll(@PathVariable Long scheduleId){
         return ResponseEntity.status(HttpStatus.OK).body(commentService.getAll(scheduleId));
     }
 

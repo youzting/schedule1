@@ -24,24 +24,27 @@ public class CommentService {
     private final UserRepository userRepository;
 
     @Transactional
-    public CreateCommentResponse save(Long scheduleId, Long userId, CreateCommentRequest request){
+    public CreateCommentResponse save(Long userId, Long scheduleId, CreateCommentRequest request){
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
                 () -> new IllegalStateException("일정이 없습니다.")
         );
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new IllegalStateException("유저가 없습니다.")
-        ) ;
+        );
         Comment comment = new Comment(
                 request.getText(),
-                schedule,
-                user
+                user,
+                schedule
+
         );
         Comment saveComment = commentRepository.save(comment);
         return new CreateCommentResponse(
                 saveComment.getId(),
                 saveComment.getText(),
                 saveComment.getCreatedAt(),
-                saveComment.getModifiedAt()
+                saveComment.getModifiedAt(),
+                userId,
+                scheduleId
         );
     }
 
@@ -50,14 +53,15 @@ public class CommentService {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
                 () -> new IllegalStateException("일정이 없습니다.")
         );
-        List<Comment> comments = commentRepository.findAll();
+        List<Comment> comments = commentRepository.findByScheduleId(scheduleId);
         List<GetCommentResponse> dtos = new ArrayList<>();
         for(Comment comment : comments){
             GetCommentResponse dto = new GetCommentResponse(
                     comment.getId(),
                     comment.getText(),
                     comment.getCreatedAt(),
-                    comment.getModifiedAt()
+                    comment.getModifiedAt(),
+                    comment.getUser().getId()
             );
             dtos.add(dto);
         }

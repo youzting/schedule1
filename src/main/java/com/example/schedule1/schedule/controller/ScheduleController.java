@@ -36,8 +36,8 @@ public class ScheduleController {
     }
 
     @GetMapping("/users/{userId}/schedules/{scheduleId}")
-    public ResponseEntity<GetScheduleResponse> getOne(@PathVariable Long scheduleId,  @SessionAttribute(name = "loginUser") SessionUser sessionUser){
-        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getOne(scheduleId));
+    public ResponseEntity<GetScheduleResponse> getOne(@PathVariable Long userId, @PathVariable Long scheduleId,  @SessionAttribute(name = "loginUser") SessionUser sessionUser){
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getOne(userId, scheduleId));
     }
 
     @PutMapping("/users/{userId}/schedules/{scheduleId}")
