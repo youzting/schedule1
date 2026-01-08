@@ -1,9 +1,11 @@
 package com.example.schedule1.user.entity;
 
+import com.example.schedule1.user.config.PasswordEncoder;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Getter
 @Table(name = "users")

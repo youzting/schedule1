@@ -1,6 +1,7 @@
 package com.example.schedule1.user.service;
 
 import com.example.schedule1.exception.DuplicateEmailException;
+import com.example.schedule1.user.config.PasswordEncoder;
 import com.example.schedule1.user.dto.*;
 import com.example.schedule1.user.entity.User;
 import com.example.schedule1.user.repository.UserRepository;
@@ -15,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
 
     @Transactional
@@ -22,10 +24,11 @@ public class UserService {
        if(userRepository.existsByEmail(request.getEmail())){
            throw new DuplicateEmailException("Email이 이미 존재합니다.");
        }
+       String encodePass = passwordEncoder.encode(request.getPassword());
         User user = new User(
                 request.getUsername(),
                 request.getEmail(),
-                request.getPassword()
+                encodePass
         );
 
         User userSave = userRepository.save(user);
@@ -44,7 +47,7 @@ public class UserService {
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow(
                 () -> new IllegalArgumentException("비밀번호 또는 이메일이 일치하지 않음")
         );
-        if (!request.getPassword().equals(user.getPassword())){
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())){
             throw new IllegalArgumentException("비밀번호 또는 이메일이 일치하지 않음");
         }
         return user;
