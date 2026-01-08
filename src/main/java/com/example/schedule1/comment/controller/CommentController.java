@@ -15,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentController {
     private final CommentService commentService;
-
+    //{userId}는 작성자Id
     @PostMapping("/users/{userId}/schedules/{scheduleId}/comments")
     public ResponseEntity<CreateCommentResponse> create(
             @PathVariable Long userId,

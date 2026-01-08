@@ -24,6 +24,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(request));
     }
 
+    //Http를 사용하기 때문에 Controller에서 처리
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request, HttpSession session) {
         User user = userService.login(request);

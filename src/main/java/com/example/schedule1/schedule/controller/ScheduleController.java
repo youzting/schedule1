@@ -40,12 +40,12 @@ public class ScheduleController {
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getOne(userId, scheduleId));
     }
 
-    @PutMapping("/users/{userId}/schedules/{scheduleId}")
+    @PutMapping("/schedules/{scheduleId}")
     public ResponseEntity<UpdateScheduleResponse> update(@PathVariable Long scheduleId, @RequestBody UpdateScheduleRequest request,  @SessionAttribute(name = "loginUser") SessionUser sessionUser){
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.update(scheduleId, request));
     }
 
-    @DeleteMapping("/users/{userId}/schedules/{scheduleId}")
+    @DeleteMapping("/schedules/{scheduleId}")
     public ResponseEntity<Void> delete(@PathVariable Long scheduleId,  @SessionAttribute(name = "loginUser") SessionUser sessionUser){
         scheduleService.delete(scheduleId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

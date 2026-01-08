@@ -31,12 +31,14 @@ public class CommentService {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new IllegalStateException("유저가 없습니다.")
         );
+        //User,Schedule 엔티티를 Comment에 연결
         Comment comment = new Comment(
                 request.getText(),
                 user,
                 schedule
 
         );
+       //userId저장
         Comment saveComment = commentRepository.save(comment);
         return new CreateCommentResponse(
                 saveComment.getId(),
