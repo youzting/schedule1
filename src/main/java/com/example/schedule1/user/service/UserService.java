@@ -43,14 +43,18 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public User login(LoginRequest request){
+    public LoginResponse login(LoginRequest request){
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow(
-                () -> new IllegalArgumentException("비밀번호 또는 이메일이 일치하지 않음")
+                () -> new IllegalArgumentException("이메일이 일치하지 않음")
         );
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())){
-            throw new IllegalArgumentException("비밀번호 또는 이메일이 일치하지 않음");
+            throw new IllegalArgumentException("비밀번호가 일치하지 않음");
         }
-        return user;
+        LoginResponse result = new LoginResponse(user.getId(), user.getEmail());
+        return new LoginResponse(
+                result.getId(),
+                result.getEmail()
+        );
     }
 
     @Transactional(readOnly = true)

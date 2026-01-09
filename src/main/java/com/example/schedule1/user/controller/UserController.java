@@ -24,15 +24,27 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(request));
     }
 
-    //Http를 사용하기 때문에 Controller에서 처리
+
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request, HttpSession session) {
-        User user = userService.login(request);
-        SessionUser sessionUser = new SessionUser(user.getId(), user.getEmail());
+    public ResponseEntity<String> login(@Valid @RequestBody LoginRequest request, HttpSession session) {
+        LoginResponse login = userService.login(request);
+        SessionUser sessionUser = new SessionUser(login.getId(), login.getEmail());
         session.setAttribute("loginUser", sessionUser);
 
-        LoginResponse response = new LoginResponse(user.getId(), user.getEmail());
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseEntity.ok("success");
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(
+            @SessionAttribute(name ="loginUser", required = false) SessionUser sessionUser,
+            HttpSession session
+    ){
+        if(sessionUser == null){
+            return ResponseEntity.badRequest().build();
+        }
+
+        session.invalidate();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @GetMapping("/users")
