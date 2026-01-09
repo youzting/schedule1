@@ -1,11 +1,16 @@
 package com.example.schedule1.schedule.service;
 
+import com.example.schedule1.comment.repository.CommentRepository;
 import com.example.schedule1.schedule.dto.*;
 import com.example.schedule1.schedule.entity.Schedule;
 import com.example.schedule1.schedule.repository.ScheduleRepository;
 import com.example.schedule1.user.entity.User;
 import com.example.schedule1.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +22,7 @@ import java.util.List;
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
 
     @Transactional
     public CreateScheduleResponse save(Long userId, CreateScheduleRequest request){
@@ -74,6 +80,27 @@ public class ScheduleService {
                 schedule.getModifiedAt(),
                 userId
         );
+    }
+
+    @Transactional(readOnly = true)
+    public Page<SchedulePageResponse> getSchedulePage(int page, int size) {
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by(Sort.Direction.DESC, "modifiedAt") // 수정일 내림차순
+        );
+
+        Page<Schedule> result = scheduleRepository.findAll(pageable);
+
+        return result.map(s -> new SchedulePageResponse(
+                s.getId(),
+                s.getTitle(),
+                s.getText(),
+                s.getUser().getUsername(),
+                commentRepository.countByScheduleId(s.getId()),
+                s.getCreatedAt(),
+                s.getModifiedAt()
+        ));
     }
 
     @Transactional()

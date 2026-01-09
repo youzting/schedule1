@@ -45,8 +45,8 @@ public class CommentService {
                 saveComment.getText(),
                 saveComment.getCreatedAt(),
                 saveComment.getModifiedAt(),
-                userId,
-                scheduleId
+                scheduleId,
+                userId
         );
     }
 
